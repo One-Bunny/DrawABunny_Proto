@@ -11,9 +11,9 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
+  - BG
+  - Object
+  - Player
   - 
   - 
   - 
@@ -40,4 +40,13 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: BG
+    uniqueID: 1812100467
+    locked: 0
+  - name: Object
+    uniqueID: 1376336651
+    locked: 0
+  - name: Player
+    uniqueID: 690402477
     locked: 0
