@@ -13,7 +13,7 @@ namespace OneBunny
 
         private Queue<LineController> _linePool = new();
 
-        private const int _POOL_COUNT = 256;
+        private const int _POOL_COUNT = 8;
 
         private void Awake()
         {
@@ -57,6 +57,17 @@ namespace OneBunny
             lineController.gameObject.SetActive(false);
             lineController.transform.SetParent(Instance.transform);
             Instance._linePool.Enqueue(lineController);
+        }
+
+        public static void ReturnAllObject()
+        {
+            GameObject[] lines;
+            lines = GameObject.FindGameObjectsWithTag("LINE");
+
+            foreach(GameObject line in lines)
+            {
+                ReturnObject(line.GetComponent<LineController>());
+            }
         }
 
     }
