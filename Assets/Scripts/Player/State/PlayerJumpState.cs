@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace OneBunny
 {
+    [FSMState((int)Player.States.JUMP)]
     public class PlayerJumpState : FSMState<Player>
     {
         #region Runner
@@ -12,6 +13,11 @@ namespace OneBunny
         {
         }
         #endregion
+
+        public override void BeginState()
+        {
+        }
+
 
     }
 

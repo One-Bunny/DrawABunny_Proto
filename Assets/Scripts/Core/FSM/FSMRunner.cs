@@ -81,11 +81,16 @@ namespace OneBunny
             _currentState = newState;
             _currentState.BeginState();
             
-            Debug.Log($"[FSM CHANGED] {_previousState} ▶ {_currentState}으로 변경");
+            Debug.Log($"[FSM CHANGED] {_currentState}으로 변경");
         }
 
         public void GetPrevious()
         {
+            if (_previousState == null)
+            {
+                return;
+            }
+
             ChangeState(_previousState);
         }
     }

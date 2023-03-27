@@ -10,6 +10,9 @@ namespace OneBunny
         {
             Start,
 
+            IDLE,
+            MOVE,
+            JUMP,
 
             End
         }
@@ -17,7 +20,7 @@ namespace OneBunny
 
         private void Awake()
         {
-
+            SetUp(States.IDLE);
         }
 
         protected override void Update()

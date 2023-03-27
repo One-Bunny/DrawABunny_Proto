@@ -4,7 +4,8 @@ using UnityEngine;
 
 namespace OneBunny
 {
-    public abstract class PlayerIdleState : FSMState<Player>
+    [FSMState((int)Player.States.IDLE)]
+    public class PlayerIdleState : FSMState<Player>
     {
         #region Runner
         public PlayerIdleState(IFSMRunner runner) : base(runner)
@@ -12,7 +13,25 @@ namespace OneBunny
         }
         #endregion
 
-        
+        public override void BeginState()
+        {
+            Debug.Log("IDLE");
+        }
+
+        public override void UpdateState()
+        {
+
+        }
+
+        public override void FixedUpdateState()
+        {
+
+        }
+
+        public override void ExitState()
+        {
+
+        }
 
     }
 }
