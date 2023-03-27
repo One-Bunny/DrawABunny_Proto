@@ -15,7 +15,6 @@ namespace OneBunny
 
         public override void BeginState()
         {
-            Debug.Log("IDLE");
         }
 
         public override void UpdateState()

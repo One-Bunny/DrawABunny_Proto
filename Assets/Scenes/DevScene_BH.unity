@@ -335,6 +335,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1027628519}
   - component: {fileID: 1027628520}
+  - component: {fileID: 1027628521}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -370,6 +371,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7f447690510da44d9930f433a99ff78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1027628521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1027628518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 087beb18d08a6404cadfee8f68df5a13, type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 3f593b67-52b9-4518-946a-196d3f77323c
+    m_ActionName: PC/Movement[/Keyboard/a,/Keyboard/d,/Keyboard/leftArrow,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 998bf498-7bf9-48df-8937-ec9c3c3d4c7e
+    m_ActionName: PC/Jump
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: PlayerActions
+  m_DefaultActionMap: PC
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &1085344391
 GameObject:
   m_ObjectHideFlags: 0
@@ -856,6 +895,7 @@ GameObject:
   - component: {fileID: 2133162969}
   - component: {fileID: 2133162972}
   - component: {fileID: 2133162971}
+  - component: {fileID: 2133162973}
   - component: {fileID: 2133162970}
   m_Layer: 0
   m_Name: Spine_Dummy
@@ -969,3 +1009,33 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2133162968}
   m_Mesh: {fileID: 0}
+--- !u!114 &2133162973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2133162968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 087beb18d08a6404cadfee8f68df5a13, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: PC
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
