@@ -1,61 +1,56 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace OneBunny
 {
     public class LineController : MonoBehaviour
     {
-        private bool isTriggerObj;
-        public bool IsTriggerObj
+
+        private LineRenderer lineRenderer;
+        public LineRenderer LineRenderer
         {
             get
             {
-                return isTriggerObj;
-            }
-            private set
-            {
-                isTriggerObj = value;
+                return lineRenderer;
             }
         }
 
-        private bool isTriggerLine;
-        public bool IsTriggerLine
+        private EdgeCollider2D edgeCollider;
+        public EdgeCollider2D EdgeCollider
         {
             get
             {
-                return isTriggerLine;
+                return edgeCollider;
+            }
+        }
+
+        private bool isCollisionObj;
+        public bool IsCollisionObj
+        {
+            get
+            {
+                return isCollisionObj;
             }
             private set
             {
-                isTriggerLine = value;
+                isCollisionObj = value;
             }
-        
         }
-
 
         public void SetTriggerObjFalse()
         {
-            this.IsTriggerObj = false;
+            this.IsCollisionObj = false;
         }
 
-        //private void OnTriggerEnter2D(Collider2D collision)
-        //{
-        //    if (collision.CompareTag("OBJ"))
-        //    {
-        //        isTriggerObj = true;
-        //    }
-        //    else if (collision.CompareTag("LINE"))
-        //    {
-        //        isTriggerLine = true;
-        //    }
-        //}
+        private void Start()
+        {
+            lineRenderer = gameObject.GetComponent<LineRenderer>();
+            edgeCollider = gameObject.GetComponent<EdgeCollider2D>();
+        }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (collision.collider.CompareTag("LINE"))
-            {
-
-            }
-                isTriggerObj = true;
+            isCollisionObj = true;
         }
     }
 }
