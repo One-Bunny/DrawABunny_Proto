@@ -3,7 +3,7 @@ using System;
 namespace OneBunny
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class FSMStateAttribute : System.Attribute
+    public class FSMStateAttribute : Attribute
     {
         public readonly int key;
 
