@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace OneBunny
 {
@@ -18,6 +19,7 @@ namespace OneBunny
         private List<Vector2> _points = new();
         private Vector2 _point;
 
+        private Rigidbody2D _lineRigidbody;
 
         void Start()
         {
@@ -35,10 +37,11 @@ namespace OneBunny
             {
 
                 _line = LinePool.GetLine();
+                _line.SetLoopFalse();
 
                 Vector3 vZero = new Vector3(0, 0, 0);
                 Quaternion qZero = new Quaternion(0, 0, 0, 0);
-                _line.gameObject.transform.SetLocalPositionAndRotation(vZero,qZero);
+                _line.gameObject.transform.SetLocalPositionAndRotation(vZero, qZero);
                 _lineRenderer = _line.GetComponent<LineRenderer>();
                 _edgeCollider = _line.GetComponent<EdgeCollider2D>();
 
@@ -46,7 +49,7 @@ namespace OneBunny
                 _lineRenderer.positionCount = 1;
                 _lineRenderer.SetPosition(0, _points[0]);
 
-                Debug.Log("_linePos: "+_line.gameObject.transform.position);
+                Debug.Log("_linePos: " + _line.gameObject.transform.position);
             }
             else if (Input.GetMouseButton(0))
             {
@@ -61,8 +64,7 @@ namespace OneBunny
                     return;
                 }
 
-                if (_points.Count == 0 || _points.Count == 1 ||
-                    (_points.Count > 1 && Vector2.Distance(_points[_points.Count - 1], _point) > 0.1f))
+                if (_points.Count == 0 || Vector2.Distance(_points[_points.Count - 1], _point) > 0.1f)
                 {
                     _points.Add(_point);
                     _lineRenderer.positionCount++;
@@ -72,6 +74,33 @@ namespace OneBunny
             }
             else if (Input.GetMouseButtonUp(0))
             {
+                if (_points.Count == 0)
+                {
+                    return;
+                }
+
+                for(int i=0; i<_points.Count-2; i++)
+                {
+                    for(int j=i+1; j < _points.Count - 1; j++)
+                    {
+                        if(Vector2.Distance(_points[i], _points[j]) < 0.1f)
+                        {
+                            Debug.Log("duplication");
+                            _line.SetLoopTrue();
+                            break;
+                        }
+                    }
+                }
+
+                if (_line.IsLoop)
+                {
+                    //DestroyImmediate(_edgeCollider);
+                    _lineRigidbody = _line.GetComponent<Rigidbody2D>();
+                    _lineRigidbody.gravityScale = 1;
+                    _lineRigidbody.drag = 1;
+                    //_line.tag = "LINEOBJ";
+                    _line.name = "LineObj";
+                }
                 _points.Clear();
             }
         }

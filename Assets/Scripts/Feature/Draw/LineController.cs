@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 namespace OneBunny
 {
@@ -37,11 +36,33 @@ namespace OneBunny
             }
         }
 
+        private bool isLoop;
+        public bool IsLoop
+        {
+            get
+            {
+                return isLoop;
+            }
+            private set
+            {
+                isLoop = value;
+            }
+        }
+
         public void SetTriggerObjFalse()
         {
             this.IsCollisionObj = false;
         }
 
+        public void SetLoopTrue()
+        {
+            this.isLoop = true;
+        }
+
+        public void SetLoopFalse()
+        {
+            this.isLoop = false;
+        }
         private void Start()
         {
             lineRenderer = gameObject.GetComponent<LineRenderer>();
