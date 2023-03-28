@@ -15,15 +15,6 @@ namespace OneBunny
 
         public override void BeginState()
         {
-        }
-
-        public override void UpdateState()
-        {
-
-        }
-
-        public override void FixedUpdateState()
-        {
 
         }
 

@@ -19,8 +19,9 @@ namespace OneBunny
         
         public override void BeginState()
         {
-            Debug.Log("MOVE");
             runnerEntity.OnMove = (x) => moveInput = x;
+
+            runnerEntity.SetAction(Player.ButtonActions.Jump, OnJump);
         }
 
         public override void FixedUpdateState()
@@ -34,7 +35,16 @@ namespace OneBunny
         public override void ExitState()
         {
             runnerEntity.OnMove = null;
+
+            runnerEntity.ClearAction(Player.ButtonActions.Jump);
         }
 
+        private void OnJump(bool isOn)
+        {
+            if(isOn)
+            {
+                runnerEntity.ChangeState(Player.States.JUMP);
+            }
+        }
     }
 }

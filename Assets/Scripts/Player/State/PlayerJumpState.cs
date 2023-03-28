@@ -14,11 +14,23 @@ namespace OneBunny
         }
         #endregion
 
+        private bool _isGrounded = false;
+        readonly private LayerMask _groundMask = LayerMask.GetMask("Ground");
+
         public override void BeginState()
+        {
+            runnerEntity.rigid.AddForce(new Vector2(0f, 500f));
+        }
+
+        public override void UpdateState()
+        {
+            Debug.Log("TEST");
+        }
+
+        public override void ExitState()
         {
 
         }
-
 
     }
 

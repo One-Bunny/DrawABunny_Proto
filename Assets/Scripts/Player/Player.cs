@@ -6,8 +6,6 @@ namespace OneBunny
 {
     public partial class Player : FSMRunner<Player>, IFSMRunner
     {
-        [field: SerializeField] public Rigidbody2D rigid { get; private set; }
-         
         public enum States : int
         {
             Start,
@@ -19,20 +17,23 @@ namespace OneBunny
             End
         }
 
+        [field: SerializeField] public Rigidbody2D rigid { get; private set; }
+
 
         private void Awake()
         {
             InitInputs();
-            
             SetUp(States.MOVE);
         }
 
         protected override void Update()
         {
+            base.Update();
+
             UpdateInputs();
+
+            Debug.DrawRay(transform.position, Vector2.down, Color.red);
         }
-
-
 
     }
 }
