@@ -9,9 +9,11 @@ namespace OneBunny
     public class PlayerJumpState : FSMState<Player>
     {
         #region Runner
+
         public PlayerJumpState(IFSMRunner runner) : base(runner)
         {
         }
+
         #endregion
 
         private bool _isGrounded = false;
@@ -19,19 +21,29 @@ namespace OneBunny
 
         public override void BeginState()
         {
-            runnerEntity.rigid.AddForce(new Vector2(0f, 500f));
+            var velocity = runnerEntity.rigid.velocity;
+            velocity.y = 10f;
+
+            runnerEntity.rigid.velocity = velocity;
         }
 
-        public override void UpdateState()
+        public override void FixedUpdateState()
         {
-            Debug.Log("TEST");
+            if (runnerEntity.rigid.velocity.y < 0)
+            {
+                Debug.Log($"PLAYER VELOCITY : {runnerEntity.rigid.velocity.y}");
+                _isGrounded = Physics2D.Raycast(runnerEntity.transform.position, Vector2.down, 0.1f, _groundMask);
+            }
+
+            if (_isGrounded)
+            {
+                runnerEntity.ChangeState(Player.States.MOVE);
+            }
         }
 
         public override void ExitState()
         {
-
+            _isGrounded = false;
         }
-
     }
-
 }
