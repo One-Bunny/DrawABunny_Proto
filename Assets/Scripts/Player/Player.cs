@@ -4,8 +4,10 @@ using UnityEngine;
 
 namespace OneBunny
 {
-    public class Player : FSMRunner<Player>, IFSMRunner
+    public partial class Player : FSMRunner<Player>, IFSMRunner
     {
+        [field: SerializeField] public Rigidbody2D rigid { get; private set; }
+         
         public enum States : int
         {
             Start,
@@ -20,12 +22,14 @@ namespace OneBunny
 
         private void Awake()
         {
-            SetUp(States.IDLE);
+            InitInputs();
+            
+            SetUp(States.MOVE);
         }
 
         protected override void Update()
         {
-
+            UpdateInputs();
         }
 
 
