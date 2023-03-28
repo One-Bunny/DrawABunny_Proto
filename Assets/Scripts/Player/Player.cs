@@ -35,5 +35,10 @@ namespace OneBunny
             Debug.DrawRay(transform.position, Vector2.down, Color.red);
         }
 
+        protected override void FixedUpdate()
+        {
+            base.FixedUpdate();
+        }
+
     }
 }
