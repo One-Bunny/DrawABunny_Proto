@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
+using UnityEngine.UI;
 
 namespace OneBunny
 {
@@ -79,11 +79,11 @@ namespace OneBunny
                     return;
                 }
 
-                for(int i=0; i<_points.Count-2; i++)
+                for (int i = 0; i < _points.Count - 2; i++)
                 {
-                    for(int j=i+1; j < _points.Count - 1; j++)
+                    for (int j = i + 1; j < _points.Count - 1; j++)
                     {
-                        if(Vector2.Distance(_points[i], _points[j]) < 0.1f)
+                        if (Vector2.Distance(_points[i], _points[j]) < 0.1f)
                         {
                             Debug.Log("duplication");
                             _line.SetLoopTrue();
@@ -94,8 +94,10 @@ namespace OneBunny
 
                 if (_line.IsLoop)
                 {
-                    //DestroyImmediate(_edgeCollider);
+                    DestroyImmediate(_edgeCollider);
+                    AddPolygonCollider2D(_points.ToArray(), _line.gameObject) ;
                     _lineRigidbody = _line.GetComponent<Rigidbody2D>();
+                    _lineRigidbody.bodyType = RigidbodyType2D.Dynamic;
                     _lineRigidbody.gravityScale = 1;
                     _lineRigidbody.drag = 1;
                     //_line.tag = "LINEOBJ";
@@ -105,6 +107,66 @@ namespace OneBunny
             }
         }
 
-    }
 
+        private void AddPolygonCollider2D(Vector2[] points, GameObject line)
+        {
+            Vector2[] meshPoints = new Vector2[points.Length];
+            System.Array.Copy(points, meshPoints, points.Length);
+
+            Mesh mesh = new();
+
+            using (var vertexHelper = new VertexHelper())
+            {
+                Debug.Log("VertexHelper");
+                int vertexCount = 0;
+
+                for(int sideCount=0; sideCount < 1; sideCount++)
+                {
+                    for(int i=0; i < meshPoints.Length; i++)
+                    {
+                        int iMapped = (sideCount == 0) ? i : ((meshPoints.Length - 1) - i);
+
+                        Vector2 vertex = meshPoints[iMapped];
+
+                        UIVertex uiVertex = new UIVertex();
+                        uiVertex.position = new Vector2(vertex.x, vertex.y);
+                        uiVertex.uv0 = new Vector2(vertex.x, vertex.y);
+
+                        vertexHelper.AddVert(uiVertex);
+
+                        if (((i > 1) && (i < meshPoints.Length)) ||
+                        (i > meshPoints.Length + 1))
+                        {
+                            // topology is a fan
+                            if (sideCount == 0)
+                            {
+                                vertexHelper.AddTriangle(0, vertexCount - 1, vertexCount);
+                            }
+                            if (sideCount == 1)
+                            {
+                                vertexHelper.AddTriangle(meshPoints.Length, vertexCount - 1, vertexCount);
+                            }
+                        }
+
+                        vertexCount++;
+                    }
+                }
+
+                vertexHelper.FillMesh(mesh);
+            }
+
+            Debug.Log("AddPolygon");
+
+            PolygonCollider2D polygonnCollider = line.AddComponent<PolygonCollider2D>();
+            polygonnCollider.points = meshPoints;
+
+            mesh.RecalculateBounds();
+            mesh.RecalculateNormals();
+
+            MeshFilter meshFilter = line.AddComponent<MeshFilter>();
+            meshFilter.mesh = mesh;
+
+            line.AddComponent<MeshRenderer>();
+        }
+    }
 }
