@@ -31,7 +31,6 @@ namespace OneBunny
         {
             if (runnerEntity.rigid.velocity.y < 0)
             {
-                Debug.Log($"PLAYER VELOCITY : {runnerEntity.rigid.velocity.y}");
                 _isGrounded = Physics2D.Raycast(runnerEntity.transform.position, Vector2.down, 0.1f, _groundMask);
             }
 
