@@ -22,7 +22,7 @@ namespace OneBunny
         public override void BeginState()
         {
             var velocity = runnerEntity.rigid.velocity;
-            velocity.y = 10f;
+            velocity.y = runnerEntity.status.data.jumpPower;
 
             runnerEntity.rigid.velocity = velocity;
         }
@@ -33,6 +33,8 @@ namespace OneBunny
             {
                 Debug.Log($"PLAYER VELOCITY : {runnerEntity.rigid.velocity.y}");
                 _isGrounded = Physics2D.Raycast(runnerEntity.transform.position, Vector2.down, 0.1f, _groundMask);
+                
+                Debug.Log(Physics2D.Raycast(runnerEntity.transform.position, Vector2.down, 0.1f).transform.tag);
             }
 
             if (_isGrounded)

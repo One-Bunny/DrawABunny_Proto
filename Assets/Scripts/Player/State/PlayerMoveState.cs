@@ -26,7 +26,7 @@ namespace OneBunny
 
         public override void FixedUpdateState()
         {
-            var velocity = new Vector2(moveInput.x,0);
+            var velocity = new Vector2(moveInput.x * runnerEntity.status.data.moveSpeed,0);
 
             velocity.y = runnerEntity.rigid.velocity.y;
             runnerEntity.rigid.velocity = velocity;

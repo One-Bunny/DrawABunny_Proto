@@ -6,6 +6,7 @@ namespace OneBunny
 {
     public partial class Player : FSMRunner<Player>, IFSMRunner
     {
+        
         public enum States : int
         {
             Start,
@@ -18,7 +19,7 @@ namespace OneBunny
         }
 
         [field: SerializeField] public Rigidbody2D rigid { get; private set; }
-
+        public PlayerStatus status;
 
         private void Awake()
         {
