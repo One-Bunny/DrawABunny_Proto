@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5773392056168941838}
   - component: {fileID: 5905252652853522706}
   - component: {fileID: 2454619058090404227}
-  - component: {fileID: 6041421599040950077}
+  - component: {fileID: -5308411560491928165}
   m_Layer: 7
   m_Name: Line
   m_TagString: LINE
@@ -168,7 +168,7 @@ EdgeCollider2D:
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
   m_UseAdjacentEndPoint: 0
---- !u!50 &6041421599040950077
+--- !u!50 &-5308411560491928165
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -183,7 +183,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 0
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1

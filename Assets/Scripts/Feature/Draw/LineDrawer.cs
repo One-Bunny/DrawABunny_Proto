@@ -6,20 +6,23 @@ namespace OneBunny
 {
     public sealed class LineDrawer : MonoBehaviour
     {
-        [SerializeField] private GameObject _linePrefab;
-
         private LineController _line;
-        private GameObject _gameObject;
         private LineRenderer _lineRenderer;
         private EdgeCollider2D _edgeCollider;
-
+        private PolygonCollider2D _polygonCollider;
+        private MeshCollider _meshCollider;
 
         private Camera _mainCamera;
-        //선의 시작점 / 끝점 저장
+
+        //선을 이루는 점 저장
         private List<Vector2> _points = new();
         private Vector2 _point;
 
         private Rigidbody2D _lineRigidbody;
+
+        //_points 배열 중 교차점에 해당하는 점들의 인덱스 저장
+        private List<int> _crossingPointIndexes = new();
+
 
         void Start()
         {
@@ -27,15 +30,19 @@ namespace OneBunny
         }
         void Update()
         {
+            InputMouseButton();
+        }
 
+        private void InputMouseButton()
+        {
             Vector3 mousePos = Input.mousePosition;
             mousePos.z = _mainCamera.nearClipPlane;
+
             _point = _mainCamera.ScreenToWorldPoint(mousePos);
 
 
             if (Input.GetMouseButtonDown(0))
             {
-
                 _line = LinePool.GetLine();
                 _line.SetLoopFalse();
 
@@ -58,7 +65,7 @@ namespace OneBunny
                 {
                     Debug.Log("물체 위에(물체와 겹치게) 그릴 수 없습니다!");
 
-                    LinePool.ReturnObject(_line);
+                    LinePool.ReturnLineToPool(_line);
                     _line.SetTriggerObjFalse();
                     _points.Clear();
                     return;
@@ -85,7 +92,34 @@ namespace OneBunny
                     {
                         if (Vector2.Distance(_points[i], _points[j]) < 0.1f)
                         {
-                            Debug.Log("duplication");
+
+                            //Debug.Log("duplication, i:" + i + " / j: " + j);
+                            //Debug.Log("points Count: " + _points.Count);
+                            //Debug.Log("distance: " + Vector2.Distance(_points[i], _points[j]));
+
+                            if (_crossingPointIndexes.Count == 0)
+                            {
+                                _crossingPointIndexes.Add(i);
+                                _crossingPointIndexes.Add(j);
+                            }
+                            else
+                            {
+                                for (int index = 0; index < _crossingPointIndexes.Count; index++)
+                                {
+                                    if (Mathf.Abs(_crossingPointIndexes[index] - i) <= 1
+                                        || Mathf.Abs(_crossingPointIndexes[index] - j) <= 1)
+                                    {
+                                        break;
+                                    }
+
+                                    if (index == _crossingPointIndexes.Count - 1)
+                                    {
+                                        _crossingPointIndexes.Add(i);
+                                        _crossingPointIndexes.Add(j);
+                                    }
+
+                                }
+                            }
                             _line.SetLoopTrue();
                             break;
                         }
@@ -95,18 +129,106 @@ namespace OneBunny
                 if (_line.IsLoop)
                 {
                     DestroyImmediate(_edgeCollider);
-                    AddPolygonCollider2D(_points.ToArray(), _line.gameObject) ;
+
+                    BakeMeshAndAddPolygonCollider(_line.gameObject);
+
                     _lineRigidbody = _line.GetComponent<Rigidbody2D>();
                     _lineRigidbody.bodyType = RigidbodyType2D.Dynamic;
                     _lineRigidbody.gravityScale = 1;
                     _lineRigidbody.drag = 1;
-                    //_line.tag = "LINEOBJ";
+
+                    _line.tag = "LINEOBJ";
                     _line.name = "LineObj";
                 }
                 _points.Clear();
+                _crossingPointIndexes.Clear();
             }
         }
 
+
+        private void BakeMeshAndAddPolygonCollider(GameObject line)
+        {
+            _polygonCollider = line.AddComponent<PolygonCollider2D>();
+
+            Mesh mesh = new();
+            _lineRenderer.BakeMesh(mesh, true);
+
+            Debug.Log("mesh vertexCount: " + mesh.vertexCount);
+
+            ConvertMeshToPolygon(mesh, _polygonCollider);
+        }
+
+        void ConvertMeshToPolygon(Mesh mesh, PolygonCollider2D polygonCollider)
+        {
+            Vector3[] vertices = mesh.vertices;
+            int numVertices = vertices.Length;
+
+            List<Vector2> projectedVertices = new();
+            for (int i = 0; i < numVertices; i++)
+            {
+                projectedVertices.Add(new Vector2(vertices[i].x, vertices[i].y));
+            }
+
+            int startPointIndex = 0;
+            int endPointIndex = 0;
+            polygonCollider.pathCount = _crossingPointIndexes.Count + 1; //1*2+1=3
+
+            _crossingPointIndexes.Sort();
+
+            for (int i = 0; i < polygonCollider.pathCount; i++)//0-3(4개), 3-10(8개). 10-13(4개) 16개
+            {
+                if (i == polygonCollider.pathCount - 1)
+                {
+                    endPointIndex = numVertices - 1;
+                }
+                else
+                {
+                    if (i == 0)
+                    {
+                        startPointIndex = 0;
+                    }
+                    endPointIndex = _crossingPointIndexes[i] * 2;
+                }
+
+                Debug.Log("i/ endPointIndex / startPointIndex: " + i+" / "+endPointIndex +" / "+ startPointIndex);
+                Vector2[] pointPath = new Vector2[endPointIndex - startPointIndex + 1];
+                projectedVertices.CopyTo(startPointIndex, pointPath, 0, endPointIndex - startPointIndex);
+
+                pointPath[pointPath.Length - 1] = pointPath[pointPath.Length / 2];
+
+                polygonCollider.SetPath(i, pointPath);
+
+                Debug.Log("i: " + i + "\n newPP Length: " + pointPath.Length
+                    + "\n startPidx / endPidx:" + startPointIndex + " / " + endPointIndex);
+
+                startPointIndex = endPointIndex;
+            }
+        }
+
+
+
+        //여기는 안쓰이는 코드들
+        private void BakeMeshAndAddMeshCollider(GameObject line)
+        {
+            DestroyImmediate(_lineRigidbody);
+            line.AddComponent<Rigidbody>();
+            line.AddComponent<MeshCollider>();
+            _meshCollider = line.GetComponent<MeshCollider>();
+
+            Mesh mesh = new();
+            _lineRenderer.BakeMesh(mesh, true);
+            _meshCollider.sharedMesh = mesh;
+            _meshCollider.convex = true;
+
+
+            //mesh.RecalculateBounds();
+            //mesh.RecalculateNormals();
+
+            //MeshFilter meshFilter = line.AddComponent<MeshFilter>();
+            //meshFilter.mesh = mesh;
+
+            //line.AddComponent<MeshRenderer>();
+        }
 
         private void AddPolygonCollider2D(Vector2[] points, GameObject line)
         {
@@ -120,9 +242,9 @@ namespace OneBunny
                 Debug.Log("VertexHelper");
                 int vertexCount = 0;
 
-                for(int sideCount=0; sideCount < 1; sideCount++)
+                for (int sideCount = 0; sideCount < 1; sideCount++)
                 {
-                    for(int i=0; i < meshPoints.Length; i++)
+                    for (int i = 0; i < meshPoints.Length; i++)
                     {
                         int iMapped = (sideCount == 0) ? i : ((meshPoints.Length - 1) - i);
 

@@ -11,6 +11,9 @@ namespace OneBunny
         [SerializeField]
         private GameObject _linePrefab;
 
+        [SerializeField]
+        private GameObject _lineObjPrefab;
+
         private Queue<LineController> _linePool = new();
 
         private const int _POOL_COUNT = 8;
@@ -25,6 +28,13 @@ namespace OneBunny
             LineController newLine = Instantiate(_linePrefab, transform).GetComponent<LineController>();
             newLine.gameObject.SetActive(false);
             return newLine;
+        }
+
+        private GameObject CreateNewLineObj()
+        {
+            GameObject newLineObj = Instantiate(_lineObjPrefab, transform);
+            newLineObj.SetActive(false);
+            return newLineObj;
         }
         private void Initialize(int count)
         {
@@ -52,21 +62,21 @@ namespace OneBunny
             }
         }
 
-        public static void ReturnObject(LineController lineController)
-        {  
+        public static void ReturnLineToPool(LineController lineController)
+        {
             lineController.gameObject.SetActive(false);
             lineController.transform.SetParent(Instance.transform);
             Instance._linePool.Enqueue(lineController);
         }
 
-        public static void ReturnAllObject()
+        public static void ReturnAllLinesToPool()
         {
             GameObject[] lines;
             lines = GameObject.FindGameObjectsWithTag("LINE");
 
-            foreach(GameObject line in lines)
+            foreach (GameObject line in lines)
             {
-                ReturnObject(line.GetComponent<LineController>());
+                ReturnLineToPool(line.GetComponent<LineController>());
             }
         }
 

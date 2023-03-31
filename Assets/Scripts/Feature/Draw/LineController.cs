@@ -4,7 +4,6 @@ namespace OneBunny
 {
     public class LineController : MonoBehaviour
     {
-
         private LineRenderer lineRenderer;
         public LineRenderer LineRenderer
         {
@@ -63,7 +62,8 @@ namespace OneBunny
         {
             this.isLoop = false;
         }
-        private void Start()
+
+        private void Awake()
         {
             lineRenderer = gameObject.GetComponent<LineRenderer>();
             edgeCollider = gameObject.GetComponent<EdgeCollider2D>();
