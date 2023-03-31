@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: PlayerStatusData
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  jumpPower: 15
+  jumpPower: 5
