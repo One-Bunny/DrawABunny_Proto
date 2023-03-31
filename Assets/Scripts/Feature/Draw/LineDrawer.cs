@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace OneBunny
 {
@@ -92,11 +91,6 @@ namespace OneBunny
                     {
                         if (Vector2.Distance(_points[i], _points[j]) < 0.1f)
                         {
-
-                            //Debug.Log("duplication, i:" + i + " / j: " + j);
-                            //Debug.Log("points Count: " + _points.Count);
-                            //Debug.Log("distance: " + Vector2.Distance(_points[i], _points[j]));
-
                             if (_crossingPointIndexes.Count == 0)
                             {
                                 _crossingPointIndexes.Add(i);
@@ -117,7 +111,6 @@ namespace OneBunny
                                         _crossingPointIndexes.Add(i);
                                         _crossingPointIndexes.Add(j);
                                     }
-
                                 }
                             }
                             _line.SetLoopTrue();
@@ -144,7 +137,6 @@ namespace OneBunny
                 _crossingPointIndexes.Clear();
             }
         }
-
 
         private void BakeMeshAndAddPolygonCollider(GameObject line)
         {
@@ -190,7 +182,7 @@ namespace OneBunny
                     endPointIndex = _crossingPointIndexes[i] * 2;
                 }
 
-                Debug.Log("i/ endPointIndex / startPointIndex: " + i+" / "+endPointIndex +" / "+ startPointIndex);
+                Debug.Log("i/ endPointIndex / startPointIndex: " + i + " / " + endPointIndex + " / " + startPointIndex);
                 Vector2[] pointPath = new Vector2[endPointIndex - startPointIndex + 1];
                 projectedVertices.CopyTo(startPointIndex, pointPath, 0, endPointIndex - startPointIndex);
 
@@ -203,92 +195,6 @@ namespace OneBunny
 
                 startPointIndex = endPointIndex;
             }
-        }
-
-
-
-        //여기는 안쓰이는 코드들
-        private void BakeMeshAndAddMeshCollider(GameObject line)
-        {
-            DestroyImmediate(_lineRigidbody);
-            line.AddComponent<Rigidbody>();
-            line.AddComponent<MeshCollider>();
-            _meshCollider = line.GetComponent<MeshCollider>();
-
-            Mesh mesh = new();
-            _lineRenderer.BakeMesh(mesh, true);
-            _meshCollider.sharedMesh = mesh;
-            _meshCollider.convex = true;
-
-
-            //mesh.RecalculateBounds();
-            //mesh.RecalculateNormals();
-
-            //MeshFilter meshFilter = line.AddComponent<MeshFilter>();
-            //meshFilter.mesh = mesh;
-
-            //line.AddComponent<MeshRenderer>();
-        }
-
-        private void AddPolygonCollider2D(Vector2[] points, GameObject line)
-        {
-            Vector2[] meshPoints = new Vector2[points.Length];
-            System.Array.Copy(points, meshPoints, points.Length);
-
-            Mesh mesh = new();
-
-            using (var vertexHelper = new VertexHelper())
-            {
-                Debug.Log("VertexHelper");
-                int vertexCount = 0;
-
-                for (int sideCount = 0; sideCount < 1; sideCount++)
-                {
-                    for (int i = 0; i < meshPoints.Length; i++)
-                    {
-                        int iMapped = (sideCount == 0) ? i : ((meshPoints.Length - 1) - i);
-
-                        Vector2 vertex = meshPoints[iMapped];
-
-                        UIVertex uiVertex = new UIVertex();
-                        uiVertex.position = new Vector2(vertex.x, vertex.y);
-                        uiVertex.uv0 = new Vector2(vertex.x, vertex.y);
-
-                        vertexHelper.AddVert(uiVertex);
-
-                        if (((i > 1) && (i < meshPoints.Length)) ||
-                        (i > meshPoints.Length + 1))
-                        {
-                            // topology is a fan
-                            if (sideCount == 0)
-                            {
-                                vertexHelper.AddTriangle(0, vertexCount - 1, vertexCount);
-                            }
-                            if (sideCount == 1)
-                            {
-                                vertexHelper.AddTriangle(meshPoints.Length, vertexCount - 1, vertexCount);
-                            }
-                        }
-
-                        vertexCount++;
-                    }
-                }
-
-                vertexHelper.FillMesh(mesh);
-            }
-
-            Debug.Log("AddPolygon");
-
-            PolygonCollider2D polygonnCollider = line.AddComponent<PolygonCollider2D>();
-            polygonnCollider.points = meshPoints;
-
-            mesh.RecalculateBounds();
-            mesh.RecalculateNormals();
-
-            MeshFilter meshFilter = line.AddComponent<MeshFilter>();
-            meshFilter.mesh = mesh;
-
-            line.AddComponent<MeshRenderer>();
         }
     }
 }

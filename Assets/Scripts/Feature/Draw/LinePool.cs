@@ -79,6 +79,5 @@ namespace OneBunny
                 ReturnLineToPool(line.GetComponent<LineController>());
             }
         }
-
     }
 }
