@@ -15,7 +15,7 @@ namespace OneBunny
         }
         #endregion
 
-        public Vector2 moveInput;
+        private Vector2 moveInput;
         
         public override void BeginState()
         {
