@@ -29,6 +29,7 @@ namespace OneBunny
             velocity.y = runnerEntity.status.data.jumpPower;
 
             runnerEntity.rigid.velocity = velocity;
+            runnerEntity._skeletonAnimation.AnimationState.SetAnimation(0, "p_Jump_animation", false);
         }
 
         public override void FixedUpdateState()
@@ -40,7 +41,7 @@ namespace OneBunny
 
             if (runnerEntity.rigid.velocity.y < 0)
             {
-                _isGrounded = Physics2D.Raycast(runnerEntity.transform.position, Vector2.down, 0.1f, _groundMask);
+                _isGrounded = Physics2D.Raycast(runnerEntity.transform.position, Vector2.down, 1f, _groundMask);
             }
 
             if (_isGrounded)
@@ -51,6 +52,7 @@ namespace OneBunny
 
         public override void ExitState()
         {
+            runnerEntity.OnMove = null;
             _isGrounded = false;
         }
     }

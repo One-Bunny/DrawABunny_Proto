@@ -13,13 +13,13 @@ namespace OneBunny
 
         private Camera _mainCamera;
 
-        //¼±À» ÀÌ·ç´Â Á¡ ÀúÀå
+        //ì„ ì„ ì´ë£¨ëŠ” ì  ì €ì¥
         private List<Vector2> _points = new();
         private Vector2 _point;
 
         private Rigidbody2D _lineRigidbody;
 
-        //_points ¹è¿­ Áß ±³Â÷Á¡¿¡ ÇØ´çÇÏ´Â Á¡µéÀÇ ÀÎµ¦½º ÀúÀå
+        //_points ë°°ì—´ ì¤‘ êµì°¨ì ì— í•´ë‹¹í•˜ëŠ” ì ë“¤ì˜ ì¸ë±ìŠ¤ ì €ì¥
         private List<int> _crossingPointIndexes = new();
 
 
@@ -59,10 +59,9 @@ namespace OneBunny
             }
             else if (Input.GetMouseButton(0))
             {
-
                 if (_line.IsCollisionObj)
                 {
-                    Debug.Log("¹°Ã¼ À§¿¡(¹°Ã¼¿Í °ãÄ¡°Ô) ±×¸± ¼ö ¾ø½À´Ï´Ù!");
+                    Debug.Log("ë¬¼ì²´ ìœ„ì—(ë¬¼ì²´ì™€ ê²¹ì¹˜ê²Œ) ê·¸ë¦´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤!");
 
                     LinePool.ReturnLineToPool(_line);
                     _line.SetTriggerObjFalse();
@@ -167,7 +166,7 @@ namespace OneBunny
 
             _crossingPointIndexes.Sort();
 
-            for (int i = 0; i < polygonCollider.pathCount; i++)//0-3(4°³), 3-10(8°³). 10-13(4°³) 16°³
+            for (int i = 0; i < polygonCollider.pathCount; i++)//0-3(4ê°œ), 3-10(8ê°œ). 10-13(4ê°œ) 16ê°œ
             {
                 if (i == polygonCollider.pathCount - 1)
                 {
