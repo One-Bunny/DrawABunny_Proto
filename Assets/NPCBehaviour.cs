@@ -18,39 +18,6 @@ public class NPCBehaviour : MonoBehaviour
 
     [SerializeField] private Canvas buttonInfoCanvas;
 
-    private void Awake()
-    {
-        playerLayer = LayerMask.GetMask("Player");
-    }
 
-    private void Update()
-    {
 
-    }
-
-    private void FixedUpdate()
-    {
-        if (SearchPlayer())
-        {
-            buttonInfoCanvas.gameObject.SetActive(true);
-        }
-        else
-        {
-            buttonInfoCanvas.gameObject.SetActive(false);
-        }
-
-    }
-
-    private bool SearchPlayer()
-    {
-        // Search Player
-
-        bool _isPlayerChecked = Physics2D.OverlapCircle(transform.position, _searchRange);
-
-        if(_isPlayerChecked)
-        {
-            return true;
-        }
-        return false;
-    }
 }
