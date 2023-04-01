@@ -11,13 +11,5 @@ public class NPCBehaviour : MonoBehaviour
 
     private LayerMask playerLayer;
 
-
-    // Text Field를 가지고 있어야 한다. 또, Field에 출력해줄 Data를 가지고 있어야 함.
-    [SerializeField] private Image _textField;
     [SerializeField] private TMP_Text _text;
-
-    [SerializeField] private Canvas buttonInfoCanvas;
-
-
-
 }
