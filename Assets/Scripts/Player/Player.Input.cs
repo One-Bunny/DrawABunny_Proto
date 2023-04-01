@@ -12,7 +12,8 @@ public partial class Player
 {
     public enum ButtonActions // bool 값으로 입력받는 액션
     {
-        Jump
+        Jump,
+        Interaction
     }
 
     public enum ValueActions //float 값으로 입력받는 액션
@@ -47,6 +48,10 @@ public partial class Player
         buttonActions.Add(ButtonActions.Jump, inputActions.Player.Jump);
         inputActions.Player.Jump.started += (x) => GetAction(ButtonActions.Jump)?.Invoke(true);
         inputActions.Player.Jump.canceled += (x) => GetAction(ButtonActions.Jump)?.Invoke(false);
+        
+        buttonActions.Add(ButtonActions.Interaction, inputActions.Player.Interaction);
+        inputActions.Player.Interaction.started += (x) => GetAction(ButtonActions.Interaction)?.Invoke(true);
+        inputActions.Player.Interaction.canceled += (x) => GetAction(ButtonActions.Interaction)?.Invoke(false);
     }
 
     private void UpdateInputs()
