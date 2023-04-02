@@ -14,12 +14,15 @@ namespace OneBunny
             IDLE,
             MOVE,
             JUMP,
+            INTERACTION,
 
             End
         }
 
         [field: SerializeField] public Rigidbody2D rigid { get; private set; }
         public PlayerStatus status;
+
+        public GameObject board;
 
         public SkeletonAnimation _skeletonAnimation;
 

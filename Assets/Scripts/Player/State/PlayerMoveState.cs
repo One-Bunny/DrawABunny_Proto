@@ -50,6 +50,7 @@ namespace OneBunny
             runnerEntity.rigid.velocity = Vector2.zero;
 
             runnerEntity.ClearAction(Player.ButtonActions.Jump);
+            runnerEntity.ClearAction(Player.ButtonActions.Interaction);
         }
 
         private void OnJump(bool isOn)

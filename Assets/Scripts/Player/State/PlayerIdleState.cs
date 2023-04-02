@@ -18,8 +18,11 @@ namespace OneBunny
         public override void BeginState()
         {
             runnerEntity.SetAction(Player.ButtonActions.Jump, OnJump);
+            runnerEntity.SetAction(Player.ButtonActions.Interaction, OnInteraction);
+            
             runnerEntity.OnMove = (x) => moveInput = x;
             runnerEntity._skeletonAnimation.AnimationState.SetAnimation(0, "P_Default_Animastion", true);
+            
         }
 
         public override void UpdateState()
@@ -35,6 +38,14 @@ namespace OneBunny
             if (isOn)
             {
                 runnerEntity.ChangeState(Player.States.JUMP);
+            }
+        }
+        
+        private void OnInteraction(bool isOn)
+        {
+            if (isOn)
+            {
+                runnerEntity.ChangeState(Player.States.INTERACTION);
             }
         }
 
