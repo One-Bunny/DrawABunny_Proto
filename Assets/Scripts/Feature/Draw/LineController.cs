@@ -22,6 +22,15 @@ namespace OneBunny
             }
         }
 
+        private Rigidbody2D rigidbody;
+        public Rigidbody2D Rigidbody
+        {
+            get
+            {
+                return rigidbody;
+            }
+        }
+
         private bool isCollisionObj;
         public bool IsCollisionObj
         {
@@ -67,6 +76,7 @@ namespace OneBunny
         {
             lineRenderer = gameObject.GetComponent<LineRenderer>();
             edgeCollider = gameObject.GetComponent<EdgeCollider2D>();
+            rigidbody = gameObject.GetComponent<Rigidbody2D>();
         }
 
         private void OnCollisionEnter2D(Collision2D collision)

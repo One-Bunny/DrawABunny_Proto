@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - LINE
+  - OBJ
   layers:
   - Default
   - TransparentFX
@@ -43,4 +45,7 @@ TagManager:
     locked: 0
   - name: Progress
     uniqueID: 1923820631
+    locked: 0
+  - name: New Layer 2
+    uniqueID: 333350201
     locked: 0

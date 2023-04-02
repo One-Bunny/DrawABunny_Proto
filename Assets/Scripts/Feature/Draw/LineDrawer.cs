@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace OneBunny
 {
@@ -9,7 +10,6 @@ namespace OneBunny
         private LineRenderer _lineRenderer;
         private EdgeCollider2D _edgeCollider;
         private PolygonCollider2D _polygonCollider;
-        private MeshCollider _meshCollider;
 
         private Camera _mainCamera;
 
@@ -17,10 +17,13 @@ namespace OneBunny
         private List<Vector2> _points = new();
         private Vector2 _point;
 
-        private Rigidbody2D _lineRigidbody;
+        private Rigidbody2D _rigidbody;
 
         //_points 배열 중 교차점에 해당하는 점들의 인덱스 저장
         private List<int> _crossingPointIndexes = new();
+
+        private string sortingLayerName = "Progress";
+        private int sortingOrder = 10;
 
 
         void Start()
@@ -70,7 +73,7 @@ namespace OneBunny
                     return;
                 }
 
-                if (_points.Count == 0 || Vector2.Distance(_points[_points.Count - 1], _point) > 0.1f)
+                if (_points.Count == 0 || Vector2.Distance(_points[_points.Count - 1], _point) >= 0.1f)
                 {
                     _points.Add(_point);
                     _lineRenderer.positionCount++;
@@ -89,7 +92,7 @@ namespace OneBunny
                 {
                     for (int j = i + 1; j < _points.Count - 1; j++)
                     {
-                        if (Vector2.Distance(_points[i], _points[j]) < 0.1f)
+                        if (Vector2.Distance(_points[i], _points[j]) <= 0.1f)
                         {
                             if (_crossingPointIndexes.Count == 0)
                             {
@@ -125,12 +128,12 @@ namespace OneBunny
 
                     BakeMeshAndAddPolygonCollider(_line.gameObject);
 
-                    _lineRigidbody = _line.GetComponent<Rigidbody2D>();
-                    _lineRigidbody.bodyType = RigidbodyType2D.Dynamic;
-                    _lineRigidbody.gravityScale = 1;
-                    _lineRigidbody.drag = 1;
+                    _rigidbody = _line.Rigidbody;
+                    _rigidbody.bodyType = RigidbodyType2D.Dynamic;
+                    _rigidbody.gravityScale = 1;
+                    _rigidbody.drag = 1;
 
-                    _line.tag = "LINEOBJ";
+                    //_line.tag = "LINEOBJ";
                     _line.name = "LineObj";
                 }
                 _points.Clear();
@@ -146,11 +149,92 @@ namespace OneBunny
             _lineRenderer.BakeMesh(mesh, true);
 
             Debug.Log("mesh vertexCount: " + mesh.vertexCount);
-
             ConvertMeshToPolygon(mesh, _polygonCollider);
+            AddMesh(line, _polygonCollider);
         }
 
-        void ConvertMeshToPolygon(Mesh mesh, PolygonCollider2D polygonCollider)
+        private void AddMesh(GameObject line, PolygonCollider2D polygonCollider)
+        {
+            MeshFilter meshFilter = line.GetComponent<MeshFilter>();
+            MeshRenderer meshRenderer = line.GetComponent<MeshRenderer>();
+            Mesh mesh = new();
+
+            List<Vector2> points = new();
+
+            for (int i = 1; i < polygonCollider.pathCount - 1; i++)
+            {
+                Vector2[] pathPoints = polygonCollider.GetPath(i);
+                Vector2[] nextPathPoints = polygonCollider.GetPath(i + 1);
+                int crossingCount = 0;
+
+                foreach (Vector2 pathPoint in pathPoints)
+                {
+                    foreach (Vector2 nextPathPoint in nextPathPoints)
+                    {
+                        if (Vector2.Distance(pathPoint, nextPathPoint) <= 0.1f)
+                        {
+                            crossingCount++;
+                        }
+                    }
+                }
+                Debug.Log(i + " / " + crossingCount);
+
+                if (crossingCount == 2 || i % 2 != 0)
+                {
+                    for (int j = 0; j < polygonCollider.GetPath(i).Length; j++)
+                    {
+                        points.Add(pathPoints[j]);
+                    }
+                }
+            }
+
+            using (var vertexHelper = new VertexHelper())
+            {
+                int vertexCount = 0;
+
+                for (int i = 0; i < points.Count; i++)
+                {
+                    Vector2 vertex = points[i];
+                    UIVertex uiVertex = new UIVertex();
+
+                    uiVertex.position = new Vector3(vertex.x, vertex.y, 0);
+                    uiVertex.uv0 = new Vector2(vertex.x, vertex.y);
+
+                    vertexHelper.AddVert(uiVertex);
+
+                    if (((i > 1) && (i < points.Count)) ||
+                        (i > points.Count + 1))
+                    {
+                        vertexHelper.AddTriangle(0, vertexCount - 1, vertexCount);
+                    }
+
+                    vertexCount++;
+                }
+
+                vertexHelper.FillMesh(mesh);
+
+            }
+
+            mesh.RecalculateBounds();
+            mesh.RecalculateNormals();
+
+            meshFilter.mesh = mesh;
+
+
+            Color[] colors = new Color[mesh.vertices.Length];
+
+            for (int i = 0; i < mesh.vertices.Length; i++)
+            {
+                colors[i] = Color.red;
+            }
+
+            mesh.SetColors(colors);
+            meshRenderer.sortingLayerName = sortingLayerName;
+            //meshRenderer.sortingOrder = sortingOrder;
+
+        }
+
+        private void ConvertMeshToPolygon(Mesh mesh, PolygonCollider2D polygonCollider)
         {
             Vector3[] vertices = mesh.vertices;
             int numVertices = vertices.Length;
@@ -182,7 +266,7 @@ namespace OneBunny
                     endPointIndex = _crossingPointIndexes[i] * 2;
                 }
 
-                Debug.Log("i/ endPointIndex / startPointIndex: " + i + " / " + endPointIndex + " / " + startPointIndex);
+                //Debug.Log("i/ endPointIndex / startPointIndex: " + i + " / " + endPointIndex + " / " + startPointIndex);
                 Vector2[] pointPath = new Vector2[endPointIndex - startPointIndex + 1];
                 projectedVertices.CopyTo(startPointIndex, pointPath, 0, endPointIndex - startPointIndex);
 
@@ -190,8 +274,8 @@ namespace OneBunny
 
                 polygonCollider.SetPath(i, pointPath);
 
-                Debug.Log("i: " + i + "\n newPP Length: " + pointPath.Length
-                    + "\n startPidx / endPidx:" + startPointIndex + " / " + endPointIndex);
+                //Debug.Log("i: " + i + "\n newPP Length: " + pointPath.Length
+                //    + "\n startPidx / endPidx:" + startPointIndex + " / " + endPointIndex);
 
                 startPointIndex = endPointIndex;
             }

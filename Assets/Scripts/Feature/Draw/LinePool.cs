@@ -11,9 +11,6 @@ namespace OneBunny
         [SerializeField]
         private GameObject _linePrefab;
 
-        [SerializeField]
-        private GameObject _lineObjPrefab;
-
         private Queue<LineController> _linePool = new();
 
         private const int _POOL_COUNT = 8;
@@ -30,12 +27,6 @@ namespace OneBunny
             return newLine;
         }
 
-        private GameObject CreateNewLineObj()
-        {
-            GameObject newLineObj = Instantiate(_lineObjPrefab, transform);
-            newLineObj.SetActive(false);
-            return newLineObj;
-        }
         private void Initialize(int count)
         {
             for (int i = 0; i < count; i++)
@@ -64,6 +55,13 @@ namespace OneBunny
 
         public static void ReturnLineToPool(LineController lineController)
         {
+            if (lineController.EdgeCollider == null)
+            {
+                Destroy(lineController.gameObject.GetComponent<PolygonCollider2D>());
+                lineController.gameObject.AddComponent<EdgeCollider2D>();
+                lineController.Rigidbody.bodyType = RigidbodyType2D.Static;
+            }
+            lineController.LineRenderer.positionCount = 0;
             lineController.gameObject.SetActive(false);
             lineController.transform.SetParent(Instance.transform);
             Instance._linePool.Enqueue(lineController);
