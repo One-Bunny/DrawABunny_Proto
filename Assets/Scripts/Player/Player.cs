@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Spine.Unity;
 using UnityEngine;
 
 namespace OneBunny
 {
     public partial class Player : FSMRunner<Player>, IFSMRunner
     {
-        
         public enum States : int
         {
             Start,
@@ -14,6 +14,7 @@ namespace OneBunny
             IDLE,
             MOVE,
             JUMP,
+            INTERACTION,
 
             End
         }
@@ -21,10 +22,14 @@ namespace OneBunny
         [field: SerializeField] public Rigidbody2D rigid { get; private set; }
         public PlayerStatus status;
 
+        public GameObject board;
+
+        public SkeletonAnimation _skeletonAnimation;
+
         private void Awake()
         {
             InitInputs();
-            SetUp(States.MOVE);
+            SetUp(States.IDLE);
         }
 
         protected override void Update()

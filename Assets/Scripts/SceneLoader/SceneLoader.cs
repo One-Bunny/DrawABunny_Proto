@@ -41,7 +41,7 @@ public class SceneLoader : MonoBehaviour
 
     private void MoveBunny(float value)
     {
-        float bunnyXPos = value * 1100f;
+        var bunnyXPos = value * (781f * 2);
         bunnyXPos += bunnyImage.rectTransform.localPosition.x;
         
         bunnyImage.rectTransform.localPosition = new Vector3(bunnyXPos, bunnyImage.rectTransform.localPosition.y, 0);

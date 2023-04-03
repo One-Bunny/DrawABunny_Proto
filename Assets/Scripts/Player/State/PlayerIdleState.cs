@@ -13,14 +13,45 @@ namespace OneBunny
         }
         #endregion
 
+        private Vector2 moveInput = Vector2.zero;
+        
         public override void BeginState()
         {
+            runnerEntity.SetAction(Player.ButtonActions.Jump, OnJump);
+            runnerEntity.SetAction(Player.ButtonActions.Interaction, OnInteraction);
+            
+            runnerEntity.OnMove = (x) => moveInput = x;
+            runnerEntity._skeletonAnimation.AnimationState.SetAnimation(0, "P_Default_Animastion", true);
+            
+        }
 
+        public override void UpdateState()
+        {
+            if (moveInput != Vector2.zero)
+            {
+                runnerEntity.ChangeState(Player.States.MOVE);
+            }
+        }
+
+        private void OnJump(bool isOn)
+        {
+            if (isOn)
+            {
+                runnerEntity.ChangeState(Player.States.JUMP);
+            }
+        }
+        
+        private void OnInteraction(bool isOn)
+        {
+            if (isOn)
+            {
+                runnerEntity.ChangeState(Player.States.INTERACTION);
+            }
         }
 
         public override void ExitState()
         {
-
+            runnerEntity.OnMove = null;
         }
 
     }
