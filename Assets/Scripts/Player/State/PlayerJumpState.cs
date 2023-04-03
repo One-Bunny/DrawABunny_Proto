@@ -37,12 +37,18 @@ namespace OneBunny
             var velocity = new Vector2(moveInput.x * runnerEntity.status.data.moveSpeed, 0);
 
             velocity.y = runnerEntity.rigid.velocity.y;
-            runnerEntity.rigid.velocity = velocity;
+
 
             if (runnerEntity.rigid.velocity.y < 0)
             {
                 _isGrounded = Physics2D.Raycast(runnerEntity.transform.position, Vector2.down, 1f, _groundMask);
             }
+            else
+            {
+                velocity.y = runnerEntity.rigid.velocity.y * 0.8f;
+            }
+
+            runnerEntity.rigid.velocity = velocity;
 
             if (_isGrounded)
             {

@@ -821,6 +821,7 @@ GameObject:
   - component: {fileID: 439805478}
   - component: {fileID: 439805477}
   - component: {fileID: 439805476}
+  - component: {fileID: 439805479}
   m_Layer: 3
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -894,6 +895,20 @@ Transform:
   m_Father: {fileID: 1027628519}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &439805479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439805475}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb295723221be8c47a3c4f1cedaf8f22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _circleWipeShader: {fileID: 4800000, guid: 25f72ce7b1ba3834dbfc4fc4fd590e77, type: 3}
+  _radius: 0
 --- !u!1 &501187479
 GameObject:
   m_ObjectHideFlags: 0
@@ -1851,7 +1866,7 @@ MonoBehaviour:
   unscaledTime: 0
   _animationName: 
   loop: 1
-  timeScale: 1
+  timeScale: 1.2
 --- !u!23 &924923847
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2136,7 +2151,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1.2
+  m_GravityScale: 3
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1

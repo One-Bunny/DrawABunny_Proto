@@ -13,6 +13,8 @@ public class SceneLoader : MonoBehaviour
     public Image bunnyImage;
 
     public TMP_Text percentText;
+    //public Camera mainCamera;
+    //private CircleWipeController circleWipeController;
 
     private void Awake()
     {
@@ -30,12 +32,14 @@ public class SceneLoader : MonoBehaviour
         {
             Debug.LogError($"{percentText.GetType()} is NOT FOUND");
         }
+
+        //circleWipeController = mainCamera.GetComponent<CircleWipeController>();
     }
 
     public void LoadScene(int sceneID)
     {
         loadCanvas.SetActive(true);
-        
+  
         StartCoroutine(LoadAsyncScene(sceneID));
     }
 
@@ -53,6 +57,8 @@ public class SceneLoader : MonoBehaviour
 
         while (!operation.isDone)
         {
+            Debug.Log(loadingFillBar.fillAmount);
+
             float progressValue = Mathf.Clamp01(operation.progress / .9f);
             MoveBunny(progressValue);
             
@@ -62,6 +68,11 @@ public class SceneLoader : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    private IEnumerator WaitForIt(float time)
+    {
+        yield return new WaitForSeconds(time);
     }
 
 }
