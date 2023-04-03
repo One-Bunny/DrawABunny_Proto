@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89ef5cd804f463546a747a1953cd6600, type: 3}
   m_Name: PlayerStatusData
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  jumpPower: 5
+  moveSpeed: 10
+  jumpPower: 8
