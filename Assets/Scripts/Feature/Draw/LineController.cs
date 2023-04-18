@@ -4,6 +4,8 @@ namespace OneBunny
 {
     public class LineController : MonoBehaviour
     {
+        [SerializeField] private GameObject _paletteCanvas;
+
         private LineRenderer lineRenderer;
         public LineRenderer LineRenderer
         {
